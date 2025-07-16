@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="signup-container">
+        <h1>User Login</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Enter your email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Enter your password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="signup-btn">Login</button>
+        </form>
+        <div style="text-align: center; margin-top: 1.5em;">
+            <a href="/index.html" style="color: #007BFF; text-decoration: none;">New User - Signup Now</a>
+        </div>
+    </div>
+    <script>
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(loginForm);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const response = await fetch('/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message);
+                }
+                alert(result.message);
+            } catch (error) {
+                console.error('Login Error:', error);
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
