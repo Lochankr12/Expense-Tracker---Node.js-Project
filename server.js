@@ -1,77 +1,80 @@
 const express = require('express');
 const path = require('path');
-const bcrypt = require('bcrypt'); // Use bcrypt for secure password handling
+const bcrypt = require('bcrypt');
+const mysql = require('mysql2/promise'); // Make sure this line exists
 
 const app = express();
 const PORT = 3000;
 
-// This array acts as a simple, temporary database.
-// In a real application, this would be a real database (like MongoDB or PostgreSQL).
-const users = [];
+// --- DATABASE CONNECTION POOL ---
+// This block connects to your MySQL database.
+const db = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: 'loch7760',   // <-- IMPORTANT: REPLACE with your actual MySQL password
+    database: 'expensess_db'    // <-- IMPORTANT: This matches your screenshot (with double 's')
+});
 
 // Middleware
-app.use(express.json()); // To parse JSON request bodies
-app.use(express.static(path.join(__dirname, 'public'))); // To serve your HTML/CSS files
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// --- SIGNUP ROUTE ---
-// This route is needed to create users that you can test the login with.
+
+// --- SIGNUP ROUTE (Saves to MySQL) ---
 app.post('/user/signup', async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        
-        const existingUser = users.find(user => user.email === email);
-        if (existingUser) {
+
+        const [existingUsers] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+        if (existingUsers.length > 0) {
             return res.status(400).json({ message: 'User with this email already exists.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = { name, email, password: hashedPassword };
-        users.push(newUser);
+        await db.execute(
+            'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+            [name, email, hashedPassword]
+        );
 
-        console.log('User signed up:', newUser);
-        console.log('All users:', users);
+        console.log('User saved to MySQL:', { name, email });
         res.status(201).json({ message: `Signup successful! Welcome, ${name}.` });
 
     } catch (error) {
+        console.error('Signup Error:', error);
         res.status(500).json({ message: 'An internal server error occurred.' });
     }
 });
 
 
-// --- LOGIN ROUTE (This is the solution for your assignment) ---
+// --- LOGIN ROUTE (Checks against MySQL) ---
 app.post('/user/login', async (req, res) => {
     try {
-        // Deliverable 1: Receive the object from the frontend (email, password)
         const { email, password } = req.body;
 
-        // Deliverable 2: Check whether the user with that email id exists
-        const user = users.find(u => u.email === email);
-
-        // Deliverable 6: If the user doesn't exist, send a 404 response
-        if (!user) {
+        const [users] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+        
+        if (users.length === 0) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        // Deliverable 3: If user exists, then try password matching
-        // We use bcrypt.compare to securely check the password against the stored hash.
+        const user = users[0];
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
         if (isPasswordCorrect) {
-            // Deliverable 4: If password matches, send a success message
             res.status(200).json({ success: true, message: 'User login successful' });
         } else {
-            // Deliverable 5: If the password isn't correct, send a 401 response
             res.status(401).json({ success: false, message: 'User not authorized' });
         }
 
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login Error:', error);
         res.status(500).json({ success: false, message: 'An internal server error occurred.' });
     }
 });
 
 
-// --- Start the server ---
+// --- Start Server ---
 app.listen(PORT, () => {
-    console.log(`✅ Server is running! Access your app at http://localhost:${PORT}`);
+    console.log(`✅ Server is running and connected to MySQL!`);
+    console.log(`Access your app at http://localhost:${PORT}`);
 });
