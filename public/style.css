@@ -1,63 +1,121 @@
+/* Basic styling for the entire app */
+:root {
+  --primary-color: #007bff;
+  --error-color: #dc3545;
+  --success-color: #28a745;
+  --background-color: #f4f4f4;
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+  background-color: var(--background-color);
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
 }
-.signup-container {
-    background-color: #fff;
-    padding: 2em 2.5em;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    width: 400px;
+
+.container {
+  margin: 30px auto;
+  width: 350px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: var(--box-shadow);
+}
+
+h1, h2, h3 {
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-control input,
+.form-control select {
+  border: 1px solid #dedede;
+  border-radius: 2px;
+  display: block;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
+
+.btn {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  box-shadow: var(--box-shadow);
+  color: #fff;
+  border: 0;
+  display: block;
+  font-size: 16px;
+  margin: 10px 0 30px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.btn:focus, .delete-btn:focus {
+  outline: 0;
+}
+
+/* List for expenses */
+.list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 40px;
+}
+
+.list li {
+  background-color: #fff;
+  box-shadow: var(--box-shadow);
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.list li span {
+  margin-left: 10px;
+}
+
+.delete-btn {
+  cursor: pointer;
+  background-color: var(--error-color);
+  border: 0;
+  color: #fff;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 2px 5px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-100%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.list li:hover .delete-btn {
+  opacity: 1;
+}
+
+.auth-form .switch-form {
     text-align: center;
-}
-h1 {
-    color: #1c1e21;
-    font-size: 2em;
-    margin-bottom: 1em;
-}
-.form-group {
-    margin-bottom: 1.2em;
-    text-align: left;
-}
-label {
-    display: block;
-    margin-bottom: 0.5em;
-    color: #606770;
-    font-weight: bold;
-}
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #dddfe2;
-    border-radius: 6px;
-    font-size: 1em;
-    box-sizing: border-box;
-}
-input:focus {
-    border-color: #1877f2;
-    outline: none;
-    box-shadow: 0 0 0 2px #e7f3ff;
-}
-.signup-btn {
-    width: 100%;
-    padding: 0.8em;
-    border: none;
-    border-radius: 6px;
-    background-color: #1877f2;
-    color: #fff;
-    font-size: 1.2em;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 0.5em;
-    transition: background-color 0.3s ease;
-}
-.signup-btn:hover {
-    background-color: #166fe5;
+    margin-top: 20px;
 }
