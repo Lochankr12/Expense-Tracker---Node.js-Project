@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Signup</title>
+    <!-- Links to the same stylesheet as your other pages for a consistent look -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- The form for user registration -->
+        <form id="signup-form" class="auth-form">
+            <h2>Create Your Account</h2>
+            
+            <!-- Name Input Field -->
+            <div class="form-control">
+                <label for="name">Enter your name:</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+            
+            <!-- Email Input Field -->
+            <div class="form-control">
+                <label for="email">Enter your email:</label>
+                <input type="email" id="email" placeholder="you@example.com" required>
+            </div>
+
+            <!-- Password Input Field -->
+            <div class="form-control">
+                <label for="password">Create a password:</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn">Sign Up</button>
+
+            <!-- Link to switch back to the Login page -->
+            <p class="switch-form">Already have an account? <a href="index.html">Login Now</a></p>
+        </form>
+    </div>
+
+    <!-- This line is crucial: it links this HTML file to its JavaScript logic -->
+    <script src="signup.js"></script>
+</body>
+</html>
